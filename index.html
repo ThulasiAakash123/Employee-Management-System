@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Management System Dashboard</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { display:flex; min-height:100vh; background: #f0f2f5; color:#182848; }
+.sidebar { width:220px; background: #1a2a50; color:white; display:flex; flex-direction:column; padding:25px 20px; }
+.sidebar h2 { text-align:center; margin-bottom:40px; font-size:22px; }
+.sidebar a { color:white; text-decoration:none; padding:12px 15px; margin-bottom:10px; border-radius:8px; display:flex; align-items:center; gap:10px; transition:0.3s; }
+.sidebar a:hover, .sidebar a.active { background:#2a5298; }
+.main-content { flex:1; padding:30px; overflow:auto; scroll-behavior:smooth; }
+header { background:#2a5298; color:white; padding:20px; border-radius:12px; margin-bottom:20px; }
+.card { background:white; padding:20px; border-radius:12px; margin-bottom:30px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+.summary { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+.summary-box { flex:1; min-width:150px; text-align:center; padding:20px; border-radius:12px; color:white; }
+#totalEmployeesBox { background:#2a5298; }
+#averageAgeBox { background:#17a2b8; }
+#deptCountBox { background:#6a1b9a; }
+table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+th, td { border:1px solid #ccc; padding:10px; text-align:center; }
+th { background:#2a5298; color:white; }
+input[type="text"], input[type="number"] { padding:8px; margin-bottom:10px; width:100%; border-radius:6px; border:1px solid #ccc; }
+button { padding:10px 15px; border:none; border-radius:6px; background:#2a5298; color:white; cursor:pointer; }
+button:hover { background:#1e3c72; }
+.charts { display:flex; gap:20px; flex-wrap:wrap; }
+.chart-container { flex:1; min-width:250px; }
+canvas { width:100% !important; height:250px !important; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>EXAFLUENCE</h2>
+    <a href="#" class="active" data-target="dashboardSection"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+    <a href="#" data-target="employeesSection"><i class="fas fa-users"></i>Employees</a>
+    <a href="#" data-target="departmentsSection"><i class="fas fa-building"></i>Departments</a>
+    <a href="#" data-target="reportsSection"><i class="fas fa-chart-line"></i>Reports</a>
+    <a href="#" data-target="settingsSection"><i class="fas fa-cog"></i>Settings</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <!-- Dashboard Section -->
+    <section id="dashboardSection">
+        <header><h1>EMPLOYEE MANAGEMENT SYSTEM</h1></header>
+        <div class="summary">
+            <div class="summary-box" id="totalEmployeesBox"><h3>Total Employees</h3><p>0</p></div>
+            <div class="summary-box" id="averageAgeBox"><h3>Average Age</h3><p>0</p></div>
+            <div class="summary-box" id="deptCountBox"><h3>Employees per Dept</h3><p>-</p></div>
+        </div>
+        <div class="charts">
+            <div class="chart-container"><h3>Employees per Department</h3><canvas id="deptChart"></canvas></div>
+            <div class="chart-container"><h3>Age Distribution</h3><canvas id="ageChart"></canvas></div>
+        </div>
+    </section>
+
+    <!-- Employees Section -->
+    <section id="employeesSection" class="card">
+        <h2>Add New Employee</h2>
+        <form id="addEmployeeForm">
+            <input type="text" id="name" placeholder="Employee Name" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <input type="text" id="department" placeholder="Department" required>
+            <button type="submit">Add Employee</button>
+        </form>
+        <input type="text" id="searchInput" placeholder="Search by name, age or department...">
+        <table id="employeeTable">
+            <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Department</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <!-- Departments Section -->
+    <section id="departmentsSection" class="card">
+        <h2>Departments</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Department</th><th>Manager</th><th>Employees</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>IT</td><td>John Doe</td><td>12</td></tr>
+                <tr><td>2</td><td>HR</td><td>Jane Smith</td><td>8</td></tr>
+                <tr><td>3</td><td>Sales</td><td>Robert Brown</td><td>15</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Reports Section -->
+    <section id="reportsSection" class="card">
+        <h2>Reports</h2>
+        <table>
+            <thead><tr><th>Report ID</th><th>Name</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+                <tr><td>R001</td><td>Monthly Sales</td><td>2025-12-01</td><td>Completed</td></tr>
+                <tr><td>R002</td><td>Attendance</td><td>2025-12-15</td><td>In Progress</td></tr>
+                <tr><td>R003</td><td>Annual Performance</td><td>2025-12-25</td><td>Pending</td></tr>
+            </tbody>
+        </table>
+        <div class="charts">
+            <div class="chart-container"><h3>Report Status</h3><canvas id="reportsChart"></canvas></div>
+        </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="settingsSection" class="card">
+        <h2>Settings</h2>
+        <div class="card">
+            <h3>Company Info</h3>
+            <p>Name: <strong>EXAFLUENCE</strong></p>
+            <p>Location: <strong>Chennai, India</strong></p>
+            <p>Founded: <strong>2018</strong></p>
+        </div>
+        <div class="card">
+            <h3>System Preferences</h3>
+            <ul>
+                <li>Theme: Light / Dark</li>
+                <li>Notifications: Enabled</li>
+                <li>Data Backup: Automatic</li>
+            </ul>
+        </div>
+        <div class="charts">
+            <div class="chart-container"><h3>User Access Overview</h3><canvas id="settingsChart"></canvas></div>
+        </div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="index.js"></script>
+
+<script>
+// Sidebar Scroll
+const sidebarLinks = document.querySelectorAll('.sidebar a');
+const mainContent = document.querySelector('.main-content');
+sidebarLinks.forEach(link=>{
+    link.addEventListener('click', e=>{
+        e.preventDefault();
+        const targetId = link.getAttribute('data-target');
+        const targetSection = document.getElementById(targetId);
+        if(targetSection){
+            mainContent.scrollTo({
+                top: targetSection.offsetTop - mainContent.offsetTop,
+                behavior: 'smooth'
+            });
+            sidebarLinks.forEach(l=>l.classList.remove('active'));
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+
+</body>
+</html>
